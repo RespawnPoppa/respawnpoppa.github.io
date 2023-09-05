@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTA III</title>
+    <style>
+       canvas{
+            background-color: white;
+            border-color: black;
+            border-style:solid;
+        }
+
+        body{
+          background-color: black;
+          margin: 0; /* Eliminar el margen predeterminado del cuerpo */
+          overflow: hidden; /* Evitar la barra de desplazamiento */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Jose Manuel Benitez Perez 
+    Ingeniero en Desarrollo de Software
+    Programación Avanzada Internet
+    Semestre VII, T.V
+    -->
+    <canvas id="myCanvas" width="1158" height="808"></canvas>
+
+    <script>
+        var canvas = document.getElementById("myCanvas")
+        var ctx = canvas.getContext('2d')
+
+        const imagenFondo = new Image();
+        imagenFondo.src = "img/map.png"
+
+        imagenFondo.onload = () => {
+            ctx.drawImage(imagenFondo, 0, 0, canvas.width, canvas.height);
+            drawPlayer(); 
+        };
+
+        var x = 225, y = 225, dir = 0, speed = 5;
+        var canvasSize = 500;
+        var cw = canvas.width, ch = canvas.height;
+        var tx = 0, ty = 0;
+        var wx = 120, wy = 320;
+        var moving = false;
+        let image = new Image();
+
+        image.src = "/img/spriteParado.png";
+
+        var playerSprites = {
+            up: new Image(),
+            down: new Image(),
+            left: new Image(),
+            right: new Image()
+        };
+
+        playerSprites.up.src = "img/playerRun3.png";
+        playerSprites.down.src = "img/playerRun4.png";
+        playerSprites.left.src = "img/playerRun2.png";
+        playerSprites.right.src = "img/playerRun1.png";
+
+        window.requestAnimationFrame = (function () {
+            return window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                function (callback) {
+                    window.setTimeout(callback, 17);
+                };
+        }());
+
+        document.addEventListener("keydown", (e) => {
+            if (!moving) {
+                moving = true;
+                switch (e.keyCode) {
+                    case 87: // W
+                        dir = 1;
+                        break;
+                    case 83: // S
+                        dir = 2;
+                        break;
+                    case 68: // D
+                        dir = 3;
+                        break;
+                    case 65: // A
+                        dir = 4;
+                        break;
+                }
+            }
+        });
+
+        document.addEventListener("keyup", (e) => {
+            moving = false;
+        });
+
+        function update() {
+            if (moving) {
+                if (dir == 1 && y > 0) {
+                    y -= speed;
+                }
+                if (dir == 2 && y + 50 < ch) {
+                    y += speed;
+                }
+                if (dir == 3 && x + 50 < cw) {
+                    x += speed;
+                }
+                if (dir == 4 && x > 0) {
+                    x -= speed;
+                }
+            }
+
+            // Colisión con el objetivo
+            if (x < tx + 20 && x + 50 > tx && y < ty + 20 && y + 50 > ty) {
+                console.log("Colisión con el objetivo");
+                tx = randomInteger(cw);
+                ty = randomInteger(ch);
+            }
+
+            drawPlayer();
+            window.requestAnimationFrame(update);
+        }
+
+        function drawPlayer() {
+            ctx.clearRect(0, 0, cw, ch);
+            ctx.drawImage(imagenFondo, 0, 0, canvas.width, canvas.height);
+
+             // Dibuja el sprite del jugador según la dirección
+             switch (dir) {
+                case 1: // Arriba
+                    ctx.drawImage(playerSprites.up, x, y, 50, 50);
+                    break;
+                case 2: // Abajo
+                    ctx.drawImage(playerSprites.down, x, y, 50, 50);
+                    break;
+                case 3: // Derecha
+                    ctx.drawImage(playerSprites.right, x, y, 50, 50);
+                    break;
+                case 4: // Izquierda
+                    ctx.drawImage(playerSprites.left, x, y, 50, 50);
+                    break;
+                default:
+                    // Cuando no se está moviendo, muestra un sprite predeterminado
+                    ctx.drawImage(playerSprites.down, x, y, 50, 50);
+                    break;
+            }
+            ctx.fillStyle = "yellow";
+            ctx.fillRect(tx, ty, 20, 20);
+
+           
+            
+        }
+
+        update();
+
+        function randomRgbColor() {
+            let r = randomInteger(255);
+            let g = randomInteger(255);
+            let b = randomInteger(255);
+            return "rgba(" + r + "," + g + "," + b + ",0.5)";
+        }
+        function randomInteger(max) {
+            return Math.floor(Math.random() * (max + 1));
+        } 
+    </script>
+</body>
+</html>
