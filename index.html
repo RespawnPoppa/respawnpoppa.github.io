@@ -20,16 +20,12 @@
 </head>
 <body>
 
-<!-- Jose Manuel Benitez Perez
-Ingeniero en Desarrollo de Software
-Programación Avanzada Internet
-Semestre VII, T.V
--->
 <canvas id="myCanvas" width="1158" height="808"></canvas>
 <script>
-    var canvas = document.getElementById("myCanvas")
-    var ctx = canvas.getContext('2d')
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext('2d');
 
+    // Función para solicitar la animación
     window.requestAnimationFrame = (function () {
         return window.requestAnimationFrame ||
             window.webkitRequestAnimationFrame ||
@@ -39,24 +35,19 @@ Semestre VII, T.V
             };
     }());
 
-    //Imagen de fondo
+    // Cargar la imagen de fondo
     const imagenFondo = new Image();
-    imagenFondo.src = "img/map.png"
+    imagenFondo.src = "img/map.png";
     imagenFondo.onload = () => {
         ctx.drawImage(imagenFondo, 0, 0, canvas.width, canvas.height);
-
     };
 
-    //Declaraciones de variables
-    var canvasSize = 500;
-    var cw = canvas.width, ch = canvas.height;
+    // Declaraciones generales
     var tx = 0, ty = 0;
-    var wx = 120, wy = 320;
     var moving = false;
-    let image = new Image();
+    var x = 516, y = 564, dir = 0, speed = 6;
 
-    // Declaración y de implementación imagenes del jugador Sprite
-    var x = 516, y = 564, dir = 0, speed = 2;
+    // Variables para el uso de los sprite imágenes del jugador
     var playerSprites = {
         up: new Image(),
         down: new Image(),
@@ -68,53 +59,59 @@ Semestre VII, T.V
     playerSprites.down.src = "img/playerRun4.png";
     playerSprites.left.src = "img/playerRun2.png";
     playerSprites.right.src = "img/playerRun1.png";
-    playerSprites.stop.src = "img/spriteParado.png"
+    playerSprites.stop.src = "img/spriteParado.png";
 
-    //Declaración y de implementación imagenes los autos
+    // Declaraciones de variables para el uso de los sprite imágenes de los autos
     var auto = new Image();
     auto.src = "img/autoI.png";
-    var squareSize = 50;
-    var positionAutoX = 516// Cambia el valor de positionAutoY a la posición vertical deseada
-    var squareX = 0; // Posición de la figura cuadrada
-    var squareSpeed = 8; // Velocidad de la figura cuadrada
+    var auto2 = new Image();
+    auto2.src = "img/autoII.png";
+    var squareX = 0;
+    var squareSpeed = 8;
     var canvasWidth = canvas.width;
-    var anchoAutoI = 190; // Cambia este valor al ancho deseado
-    var altoAutoI = 80; // Cambia este valor al alto deseado
+    var anchoAutoI = 190;
+    var altoAutoI = 80;
 
-    // Función para mover el jugador
+    // Definición de valores de colisión para los autos
+    var squareSize = 50;
+    var positionAutoY = canvas.height / 1.90 - squareSize / 1.90;
+    var positionAutoY2 = canvas.height / 2.4 - altoAutoI / 2.4;
+    var squareX2 = canvasWidth;
+
+    // Controles del jugador
     document.addEventListener("keydown", (e) => {
         if (!moving) {
             moving = true;
             switch (e.keyCode) {
-                case 87: // W
-                    dir = 1;
+                case 87: 
+                    dir = 1; 
                     break;
-                case 83: // S
-                    dir = 2;
+                case 83: 
+                    dir = 2; 
                     break;
-                case 68: // D
-                    dir = 3;
+                case 68: 
+                    dir = 3; 
                     break;
-                case 65: // A
-                    dir = 4;
+                case 65: 
+                    dir = 4; 
                     break;
             }
         }
     });
+
     document.addEventListener("keyup", (e) => {
         moving = false;
     });
 
-    // Función para actualizar el juego y los efectos de colisión o actualización fotograma
     function update() {
         if (moving) {
             if (dir == 1 && y > 0) {
                 y -= speed;
             }
-            if (dir == 2 && y + 50 < ch) {
+            if (dir == 2 && y + 50 < canvas.height) {
                 y += speed;
             }
-            if (dir == 3 && x + 50 < cw) {
+            if (dir == 3 && x + 50 < canvas.width) {
                 x += speed;
             }
             if (dir == 4 && x > 0) {
@@ -122,11 +119,28 @@ Semestre VII, T.V
             }
         }
 
-        // Colisión con el objetivo
-        if (x < tx + 20 && x + 50 > tx && y < ty + 20 && y + 50 > ty) {
-            console.log("Colisión con el objetivo");
-            tx = randomInteger(cw);
-            ty = randomInteger(ch);
+        // Colisión con el objetivo (carro1)
+        if (
+            x < squareX + squareSize &&
+            x + 50 > squareX &&
+            y < positionAutoY + squareSize &&
+            y + 50 > positionAutoY
+        ) {
+            console.log("Colisión con el objetivo (carro1)");
+            x = 516;
+            y = 564;
+        }
+
+        // Colisión con el objetivo (carro2)
+        if (
+            x < squareX2 + squareSize &&
+            x + 50 > squareX2 &&
+            y < positionAutoY2 + squareSize &&
+            y + 50 > positionAutoY2
+        ) {
+            console.log("Colisión con el objetivo (carro2)");
+            x = 516;
+            y = 564;
         }
 
         squareX += squareSpeed;
@@ -134,25 +148,22 @@ Semestre VII, T.V
         if (squareX > canvasWidth) {
             squareX = -squareSize;
         }
+
+        moveAuto2();
         drawScene();
         window.requestAnimationFrame(update);
     }
 
-    // Función para dibujar la escena y la pintura del juego
+    
     function drawScene() {
-        //Fondo del escenario
-        ctx.clearRect(0, 0, cw, ch);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(imagenFondo, 0, 0, canvas.width, canvas.height);
 
-        
-            // Restablece la posición predeterminada del auto cuando no se mueve a la izquierda
-            positionAutoY = 400;
-    
+        ctx.drawImage(auto, squareX, positionAutoY, anchoAutoI, altoAutoI);
+        ctx.drawImage(auto2, squareX2, positionAutoY2, anchoAutoI, altoAutoI);
 
-        ctx.drawImage(auto, squareX, positionAutoY, anchoAutoI, altoAutoI); // Ajusta la posición Y aquí
-
-        // Dibuja el sprite del jugador según la dirección
         switch (dir) {
+            // Dibuja el sprite del jugador según la dirección
             case 1:
                 ctx.drawImage(playerSprites.up, x, y, 50, 50);
                 break;
@@ -169,15 +180,14 @@ Semestre VII, T.V
                 ctx.drawImage(playerSprites.stop, x, y, 50, 50);
                 break;
         }
-
     }
 
-    // Para saber las direcciones con click mouse
-    canvas.addEventListener("mousedown", function (event) {
-        var x = event.layerX;
-        var y = event.layerY;
-        console.log("Coordenadas x:", x, "y:", y);
-    });
+    function moveAuto2() {
+        squareX2 -= squareSpeed; 
+        if (squareX2 + anchoAutoI < 0) {
+            squareX2 = canvasWidth;
+        }
+    }
 
     update();
 </script>
