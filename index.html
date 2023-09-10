@@ -1,27 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GTA III</title>
     <style>
+        @font-face {
+            font-family: "pricedown";
+            src: url("pricedow.ttf") format("truetype");
+        }
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url("img/fondoGTAIII.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+
+        }
         canvas {
             background-color: white;
             border-color: black;
             border-style: solid;
-        }
-
-        body {
-            background-color: black;
-            margin: 0;
-            overflow: hidden;
+            margin: auto;
+            display: block;
         }
     </style>
 </head>
 
 <body>
-
+    <!-- Jose Manuel Benitez Perez
+    Ingeniero en Desarrollo de Software
+    Programación Avanzada Internet
+    Semestre VII, T.V
+    -->
     <canvas id="myCanvas" width="1158" height="808"></canvas>
     <script>
         var canvas = document.getElementById("myCanvas");
@@ -39,9 +54,21 @@
 
         // Cargar la imagen de fondo
         const imagenFondo = new Image();
+        var mostrarPresentacion = true;
         imagenFondo.src = "img/map.png";
         imagenFondo.onload = () => {
-            ctx.drawImage(imagenFondo, 0, 0, canvas.width, canvas.height);
+            // Dibuja la imagen de fondo solo cuando no esté en modo de presentación
+            if (!mostrarPresentacion) {
+                ctx.drawImage(imagenFondo, 0, 0, canvas.width, canvas.height);
+            }
+        };
+        var presentacion = new Image();
+        presentacion.src = "img/inicio.png";
+        presentacion.onload = function () {
+            // Dibuja la imagen de presentación al cargarla, si está en modo de presentación
+            if (mostrarPresentacion) {
+                ctx.drawImage(presentacion, 0, 0, canvas.width, canvas.height);
+            }
         };
 
         //HUD (Adorno)
@@ -62,17 +89,33 @@
         var animationIntervalUp;
         var currentDownSprite = 0;
         var animationIntervalDown;
+        var framesPorSegundo = 30;
+        var frame = 0;
 
-        // Musica de fondo y sonido de carros
-        var music = new Audio("musicGTA3.mp3");
-        music.play();
-        var carSound = new Audio("sonidoCarro.mp3");
-
-        function playCarSound() {
-            carSound.play();
-            setTimeout(playCarSound, 20000);
-        }
-        playCarSound();
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Enter" && mostrarPresentacion) {
+                mostrarPresentacion = false;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                // Musica de fondo y sonido de carros
+                const music = new Audio("music/musicGTA3.mp3");
+                var carSound = new Audio("music/sonidoCarroI.mp3");
+                var carSound2 = new Audio("music/sonidoCarroII.mp3")
+                update(); // Comienza el juego
+                music.play()
+                //Sonido de la bocinas carro
+                function playCarSound() {
+                    carSound.volume = 0.1;
+                    carSound.play();
+                    setTimeout(playCarSound, 10000);
+                }
+                playCarSound();
+                function playCarSound2() {
+                    carSound2.play();
+                    setTimeout(playCarSound2, 4000);
+                }
+                playCarSound2();
+            }
+        });
 
         // Variables para el uso de los sprite imágenes del jugador
         var playerSprites = {
@@ -86,6 +129,7 @@
             stopUp: new Image(),
             stopDown: new Image()
         };
+
         playerSprites.up[0].src = "img/playerRun3.png";
         playerSprites.up[1].src = "img/playerRun3.1.png";
         playerSprites.down[0].src = "img/playerRun4.png";
@@ -101,6 +145,7 @@
         playerSprites.stopLeft.src = "img/spriteParadoLeft.png";
         playerSprites.stopUp.src = "img/spriteParado.png"
         playerSprites.stopDown.src = "img/spriteParadoDown.png";
+        var gritoSound = new Audio("music/Grito.mp3");
 
         // Declaraciones de variables para el uso de los sprite imágenes de los autos
         var auto = new Image();
@@ -129,8 +174,6 @@
         var squareX2 = canvasWidth;
         var squareX3 = canvasWidth;
         var squareX4 = canvasWidth;
-
-
 
         // Controles del jugador
         document.addEventListener("keydown", (e) => {
@@ -177,7 +220,7 @@
                     break;
             }
         });
-        
+
         // Función para actualizar el juego y los efectos de colisión o actualización fotograma
         function update() {
             if (moving) {
@@ -207,7 +250,6 @@
                     }, 160);
                 }
             }
-
             // Colisión con el objetivo (carro1)
             if (
                 x < squareX + squareSize &&
@@ -218,8 +260,8 @@
                 console.log("Colisión con el objetivo (carro1)");
                 x = 516;
                 y = 564;
+                gritoSound.play();
             }
-
             // Colisión con el objetivo (carro2)
             if (
                 x < squareX2 + squareSize &&
@@ -230,18 +272,20 @@
                 console.log("Colisión con el objetivo (carro2)");
                 x = 516;
                 y = 564;
+                gritoSound.play();
             }
-
             // Colisión con el objetivo (carro3)
             if (
                 x < squareX3 + squareSize &&
                 x + 50 > squareX3 &&
                 y < positionAutoY3 + squareSize &&
                 y + 50 > positionAutoY3
+
             ) {
                 console.log("Colisión con el objetivo (carro3)");
                 x = 516;
                 y = 564;
+                gritoSound.play();
             }
             // Colisión con el objetivo (carro4)
             if (
@@ -253,14 +297,20 @@
                 console.log("Colisión con el objetivo (carro4)");
                 x = 516;
                 y = 564;
+                gritoSound.play();
             }
-
             squareX += squareSpeed;
 
             if (squareX > canvasWidth) {
                 squareX = -squareSize;
             }
-
+            if (++frame === framesPorSegundo) {
+                frame = 0;
+                if (++segundos === 60) {
+                    segundos = 0;
+                    minutos++;
+                }
+            }
             moveAuto2();
             moveAuto3();
             moveAuto4();
@@ -268,10 +318,25 @@
             window.requestAnimationFrame(update);
         }
 
+
+        // let nivel2Activado = false;
+
+        var minutos = 0;
+        var segundos = 0;
+
+        function mostrarContador(minutos, segundos) {
+            ctx.fillStyle = "#c1a679";
+            ctx.font = "40px pricedown";
+            ctx.lineWidth = 5;
+            ctx.strokeText(minutos + ":" + segundos, 990, 28);
+            ctx.fillText(minutos + ":" + segundos, 990, 28);
+        }
+
         // Función para dibujar la escena y la pintura del juego
         function drawScene() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(imagenFondo, 0, 0, canvas.width, canvas.height);
+
             ctx.drawImage(hud, 880, 0, 260, 105);
             ctx.drawImage(radar, 40, 640, 180, 160)
 
@@ -309,6 +374,14 @@
                     ctx.drawImage(playerSprites.stop, x, y, 50, 50);
                     break;
             }
+            mostrarContador(minutos, segundos);
+            // Prueba de codigo, esta comentado
+            // ctx.fillStyle = "red"; // Establece el color de relleno en rojo
+            // ctx.fillRect(100, 100, 50, 50);
+
+            // if (x > 100 && x < 150 && y > 100 && y < 150) {
+            //     window.location.href = "index2.html";
+            // }
         }
 
         //Funciones para mover el objeto de los carros izquierda a derecha
@@ -332,9 +405,6 @@
                 squareX4 = canvasWidth;
             }
         }
-
-        update();
     </script>
 </body>
-
 </html>
