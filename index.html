@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
             font-family: "pricedown";
             src: url("pricedow.ttf") format("truetype");
         }
+
         body {
             margin: 0;
             overflow: hidden;
@@ -21,6 +23,7 @@
             background-repeat: no-repeat;
 
         }
+
         canvas {
             background-color: white;
             border-color: black;
@@ -71,6 +74,7 @@
             }
         };
 
+
         //HUD (Adorno)
         var hud = new Image();
         hud.src = "img/HUD.png";
@@ -80,7 +84,7 @@
         // Declaraciones generales o de otro usos
         var tx = 0, ty = 0;
         var moving = false;
-        var x = 516, y = 564, dir = 0, speed = 4;
+        var x = 516, y = 750, dir = 0, speed = 4;
         var currentRightSprite = 0;
         var animationInterval;
         var currentLeftSprite = 0;
@@ -118,7 +122,7 @@
                 playCarSound2();
             }
         });
-//
+        //
         // Variables para el uso de los sprite imágenes del jugador
         var playerSprites = {
             up: [new Image(), new Image()],
@@ -147,7 +151,7 @@
         playerSprites.stopLeft.src = "img/spriteParadoLeft.png";
         playerSprites.stopUp.src = "img/spriteParado.png"
         playerSprites.stopDown.src = "img/spriteParadoDown.png";
-        var gritoSound = new Audio("music/Grito.mp3");
+        var gritoSound = new Audio("music/Shout.mp3");
 
         // Declaraciones de variables para el uso de los sprite imágenes de los autos
         var auto = new Image();
@@ -158,24 +162,41 @@
         auto3.src = "img/autoIII.png";
         var auto4 = new Image();
         auto4.src = "img/autoIV.png";
+        var auto5 = new Image();
+        auto5.src = "img/autoV.png";
+        var auto6 = new Image();
+        auto6.src = "img/autoVI.png";
+        var auto7 = new Image();
+        auto7.src = "img/autoVII.png"
 
         var squareX = 0;
         var squareSpeed = 8;
         var squareSpeed2 = 12;
         var squareSpeed3 = 15;
+        var squareSpeed4 = 18;
+        var squareSpeed5 = 12;
+        var squareSpeed6 = 10;
+        var squareSpeed7 = 11;
         var canvasWidth = canvas.width;
-        var anchoAutoI = 190;
-        var altoAutoI = 80;
+        var anchoAuto = 190;
+        var altoAuto = 80;
 
         // Definición de valores de colisión para los autos
         var squareSize = 50;
         var positionAutoY = canvas.height / 1.90 - squareSize / 1.90;
-        var positionAutoY2 = canvas.height / 2.4 - altoAutoI / 2.4;
-        var positionAutoY3 = canvas.height / 3.4 - altoAutoI / 3.4;
-        var positionAutoY4 = canvas.height / 6 - altoAutoI / 6;
+        var positionAutoY2 = canvas.height / 2.4 - altoAuto / 2.4;
+        var positionAutoY3 = canvas.height / 3.4 - altoAuto / 3.4;
+        var positionAutoY4 = canvas.height / 6 - altoAuto / 6;
+        var positionAutoY5 = canvas.height / 1.50 - altoAuto / 1.50;
+        var positionAutoY6 = canvas.height / 1.30 - altoAuto / 1.30;
+        var positionAutoY7 = canvas.height / 1.10 - altoAuto / 1.10;
+
         var squareX2 = canvasWidth;
         var squareX3 = canvasWidth;
         var squareX4 = canvasWidth;
+        var squareX5 = canvasWidth;
+        var squareX6 = canvasWidth;
+        var squareX7 = canvasWidth;
 
         // Controles del jugador
         document.addEventListener("keydown", (e) => {
@@ -209,7 +230,7 @@
             currentLeftSprite = 0;
             currentDownSprite = 0;
             currentUpSprite = 0;
-
+            
             switch (e.keyCode) {
                 case 68:
                     dir = 6;
@@ -261,7 +282,7 @@
             ) {
                 console.log("Colisión con el objetivo (carro1)");
                 x = 516;
-                y = 564;
+                y = 750;
                 gritoSound.load();
                 gritoSound.play();
             }
@@ -274,7 +295,7 @@
             ) {
                 console.log("Colisión con el objetivo (carro2)");
                 x = 516;
-                y = 564;
+                y = 750;
                 gritoSound.load();
                 gritoSound.play();
             }
@@ -288,7 +309,7 @@
             ) {
                 console.log("Colisión con el objetivo (carro3)");
                 x = 516;
-                y = 564;
+                y = 750;
                 gritoSound.load();
                 gritoSound.play();
             }
@@ -301,10 +322,50 @@
             ) {
                 console.log("Colisión con el objetivo (carro4)");
                 x = 516;
-                y = 564;
+                y = 750;
                 gritoSound.load();
                 gritoSound.play();
             }
+            // Colisión con el objetivo (carro5)
+            if (
+                x < squareX5 + squareSize &&
+                x + 50 > squareX5 &&
+                y < positionAutoY5 + squareSize &&
+                y + 50 > positionAutoY5
+            ) {
+                console.log("Colisión con el objetivo (carro5)");
+                x = 516;
+                y = 750;
+                gritoSound.load();
+                gritoSound.play();
+            }
+            // Colisión con el objetivo (carro6)
+            if (
+                x < squareX6 + squareSize &&
+                x + 50 > squareX6 &&
+                y < positionAutoY6 + squareSize &&
+                y + 50 > positionAutoY6
+            ) {
+                console.log("Colisión con el objetivo (carro6)");
+                x = 516;
+                y = 750;
+                gritoSound.load();
+                gritoSound.play();
+            }
+            // Colisión con el objetivo (carro7)
+            if (
+                x < squareX7 + squareSize &&
+                x + 50 > squareX7 &&
+                y < positionAutoY7 + squareSize &&
+                y + 50 > positionAutoY7
+            ) {
+                console.log("Colisión con el objetivo (carro7)");
+                x = 516;
+                y = 750;
+                gritoSound.load();
+                gritoSound.play();
+            }
+            
             squareX += squareSpeed;
 
             if (squareX > canvasWidth) {
@@ -324,11 +385,11 @@
             window.requestAnimationFrame(update);
         }
 
-
-        // let nivel2Activado = false;
-
         var minutos = 0;
         var segundos = 0;
+        var estadoJuego = "normal";
+        var imagenFondo2 = new Image();
+
 
         function mostrarContador(minutos, segundos) {
             ctx.fillStyle = "#c1a679";
@@ -339,17 +400,31 @@
         }
 
         // Función para dibujar la escena y la pintura del juego
+
         function drawScene() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(imagenFondo, 0, 0, canvas.width, canvas.height);
+
+            if (estadoJuego === "normal") {
+                ctx.drawImage(imagenFondo, 0, 0, canvas.width, canvas.height);
+            } else {
+                ctx.drawImage(imagenFondo2, 0, 0, canvas.width, canvas.height);
+                ctx.drawImage(auto5, squareX5, positionAutoY5, anchoAuto, altoAuto);
+                ctx.drawImage(auto6, squareX6, positionAutoY6, anchoAuto, altoAuto);
+                ctx.drawImage(auto7, squareX7, positionAutoY7, anchoAuto, altoAuto);
+
+                moveAuto5();
+                moveAuto6();
+                moveAuto7();
+            }
 
             ctx.drawImage(hud, 880, 0, 260, 105);
-            ctx.drawImage(radar, 40, 640, 180, 160)
+            ctx.drawImage(radar, 40, 640, 180, 160);
 
-            ctx.drawImage(auto, squareX, positionAutoY, anchoAutoI, altoAutoI);
-            ctx.drawImage(auto2, squareX2, positionAutoY2, anchoAutoI, altoAutoI);
-            ctx.drawImage(auto3, squareX3, positionAutoY3, anchoAutoI, altoAutoI);
-            ctx.drawImage(auto4, squareX4, positionAutoY4, anchoAutoI, altoAutoI)
+            ctx.drawImage(auto, squareX, positionAutoY, anchoAuto, altoAuto);
+            ctx.drawImage(auto2, squareX2, positionAutoY2, anchoAuto, altoAuto);
+            ctx.drawImage(auto3, squareX3, positionAutoY3, anchoAuto, altoAuto);
+            ctx.drawImage(auto4, squareX4, positionAutoY4, anchoAuto, altoAuto);
+
 
             switch (dir) {
                 case 1:
@@ -381,36 +456,69 @@
                     break;
             }
             mostrarContador(minutos, segundos);
-            // Prueba de codigo, esta comentado
-            // ctx.fillStyle = "red"; // Establece el color de relleno en rojo
-            // ctx.fillRect(100, 100, 50, 50);
 
-            // if (x > 100 && x < 150 && y > 100 && y < 150) {
-            //     window.location.href = "index2.html";
-            // }
+            ctx.fillStyle = "red"; // prueba 
+            ctx.fillRect(555, 25, 50, 50);
+
+            if (x > 555 && x < 605 && y > 25 && y < 75) {
+
+                estadoJuego = "colision";
+
+                imagenFondo2.src = "img/map2.png";
+
+                x = 516;
+                y = 750;
+                squareSpeed *= 2;
+                squareSpeed2 *= 1.8;
+                squareSpeed3 *= 2.2;
+                squareSpeed6 *= 2.3;
+
+            }
         }
 
-        //Funciones para mover el objeto de los carros izquierda a derecha
         function moveAuto2() {
-            squareX2 -= squareSpeed;
-            if (squareX2 + anchoAutoI < 0) {
+            squareX2 -= squareSpeed2;
+            if (squareX2 + anchoAuto < 0) {
                 squareX2 = canvasWidth;
             }
         }
 
         function moveAuto3() {
-            squareX3 += squareSpeed2;
+            squareX3 += squareSpeed3;
             if (squareX3 > canvas.width) {
-                squareX3 = -anchoAutoI;
+                squareX3 = -anchoAuto;
             }
         }
 
         function moveAuto4() {
-            squareX4 -= squareSpeed3;
-            if (squareX4 + anchoAutoI < 0) {
+            squareX4 -= squareSpeed4;
+            if (squareX4 + anchoAuto < 0) {
                 squareX4 = canvasWidth;
             }
         }
+
+        function moveAuto5() {
+            squareX5 += squareSpeed5; 
+            if (squareX5 > canvasWidth) {
+                squareX5 = -anchoAuto; 
+            }
+        }
+
+        function moveAuto6() {
+            squareX6 -= squareSpeed6;
+            if (squareX6 + anchoAuto < 0) {
+                squareX6 = canvasWidth;
+            }
+        }
+
+        function moveAuto7() {
+            squareX7 += squareSpeed7; 
+            if (squareX7 > canvasWidth) {
+                squareX7 = -anchoAuto; 
+            }
+        }
+       
+        
     </script>
 </body>
 </html>
