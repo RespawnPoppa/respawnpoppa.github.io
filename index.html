@@ -74,7 +74,6 @@
             }
         };
 
-
         //HUD (Adorno)
         var hud = new Image();
         hud.src = "img/HUD.png";
@@ -95,13 +94,22 @@
         var animationIntervalDown;
         var framesPorSegundo = 30;
         var frame = 0;
+        var nivel = 1;
+        var toquesCuadroRojo = 0;
+        var music = new Audio("music/musicGTA3.mp3");
+        music.currentTime = 0;
+        music.volume = 0.5;
+        music.addEventListener("ended", function () {
+            music.currentTime = 0;
+            music.play();
+        });
 
+        //Comenzar el juego con el enter
         document.addEventListener("keydown", function (event) {
             if (event.key === "Enter" && mostrarPresentacion) {
                 mostrarPresentacion = false;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 // Musica de fondo y sonido de carros
-                const music = new Audio("music/musicGTA3.mp3");
                 var carSound = new Audio("music/sonidoCarroI.mp3");
                 var carSound2 = new Audio("music/sonidoCarroII.mp3")
                 update(); // Comienza el juego
@@ -169,14 +177,15 @@
         var auto7 = new Image();
         auto7.src = "img/autoVII.png"
 
+        //Variables para el uso control de la velocidad carros, ancho y alto
         var squareX = 0;
-        var squareSpeed = 8;
-        var squareSpeed2 = 12;
-        var squareSpeed3 = 15;
-        var squareSpeed4 = 18;
-        var squareSpeed5 = 12;
-        var squareSpeed6 = 10;
-        var squareSpeed7 = 11;
+        var squareSpeed = 2;
+        var squareSpeed2 = 4;
+        var squareSpeed3 = 5;
+        var squareSpeed4 = 7;
+        var squareSpeed5 = 1;
+        var squareSpeed6 = 6;
+        var squareSpeed7 = 4;
         var canvasWidth = canvas.width;
         var anchoAuto = 190;
         var altoAuto = 80;
@@ -219,6 +228,7 @@
             }
         });
 
+        //Animaciones
         document.addEventListener("keyup", (e) => {
             moving = false;
             clearInterval(animationInterval);
@@ -230,7 +240,7 @@
             currentLeftSprite = 0;
             currentDownSprite = 0;
             currentUpSprite = 0;
-            
+
             switch (e.keyCode) {
                 case 68:
                     dir = 6;
@@ -246,6 +256,7 @@
 
         // Función para actualizar el juego y los efectos de colisión o actualización fotograma
         function update() {
+            //Efecto de la animación de correr
             if (moving) {
                 if (dir == 1 && y > 0) {
                     y -= speed;
@@ -273,6 +284,7 @@
                     }, 160);
                 }
             }
+            // Condicional para el efecto coalisional cuando choca jugador contra carro
             // Colisión con el objetivo (carro1)
             if (
                 x < squareX + squareSize &&
@@ -365,12 +377,13 @@
                 gritoSound.load();
                 gritoSound.play();
             }
-            
-            squareX += squareSpeed;
 
+            squareX += squareSpeed;
             if (squareX > canvasWidth) {
                 squareX = -squareSize;
             }
+
+            //Disminuir los segundos un poco lento
             if (++frame === framesPorSegundo) {
                 frame = 0;
                 if (++segundos === 60) {
@@ -378,6 +391,7 @@
                     minutos++;
                 }
             }
+            // Hacer la animaciones de la pintura carro cuando se mueven
             moveAuto2();
             moveAuto3();
             moveAuto4();
@@ -385,11 +399,13 @@
             window.requestAnimationFrame(update);
         }
 
+        //Variables del contador y el estado de nivel
         var minutos = 0;
         var segundos = 0;
         var estadoJuego = "normal";
         var imagenFondo2 = new Image();
-
+        var spriteSave = new Image();
+        spriteSave.src = "img/save.png";
 
         function mostrarContador(minutos, segundos) {
             ctx.fillStyle = "#c1a679";
@@ -400,10 +416,10 @@
         }
 
         // Función para dibujar la escena y la pintura del juego
-
         function drawScene() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+            // Pasar nivel 2 cuando el jugador toque el sprite save y el efecto pintar mas carros
             if (estadoJuego === "normal") {
                 ctx.drawImage(imagenFondo, 0, 0, canvas.width, canvas.height);
             } else {
@@ -420,12 +436,13 @@
             ctx.drawImage(hud, 880, 0, 260, 105);
             ctx.drawImage(radar, 40, 640, 180, 160);
 
+            //Autos del imagen
             ctx.drawImage(auto, squareX, positionAutoY, anchoAuto, altoAuto);
             ctx.drawImage(auto2, squareX2, positionAutoY2, anchoAuto, altoAuto);
             ctx.drawImage(auto3, squareX3, positionAutoY3, anchoAuto, altoAuto);
             ctx.drawImage(auto4, squareX4, positionAutoY4, anchoAuto, altoAuto);
 
-
+            //Pintura de los sprite de la animación correr y parase
             switch (dir) {
                 case 1:
                     ctx.drawImage(playerSprites.up[currentUpSprite], x, y, 50, 50);
@@ -457,25 +474,37 @@
             }
             mostrarContador(minutos, segundos);
 
-            ctx.fillStyle = "red"; // prueba 
-            ctx.fillRect(555, 25, 50, 50);
+            //Sprite del save
+            ctx.drawImage(spriteSave, 555, 25, 50, 50);
 
+            //Contador de nivel
+            ctx.fillStyle = "white";
+            ctx.font = "40px pricedown";
+            ctx.lineWidth = 5;
+            ctx.strokeText("Nivel " + nivel, 20, 60);
+            ctx.fillText("Nivel " + nivel, 20, 60);
+
+            // Verificar colisión / toca del sprite save
             if (x > 555 && x < 605 && y > 25 && y < 75) {
-
                 estadoJuego = "colision";
-
                 imagenFondo2.src = "img/map2.png";
-
                 x = 516;
                 y = 750;
-                squareSpeed *= 2;
-                squareSpeed2 *= 1.8;
-                squareSpeed3 *= 2.2;
-                squareSpeed6 *= 2.3;
 
+                squareSpeed *= 1.2;
+                squareSpeed2 *= 1.2;
+                squareSpeed3 *= 1.2;
+                squareSpeed4 *= 1.3;
+                squareSpeed5 *= 2.3;
+                squareSpeed6 *= 1.2;
+                squareSpeed6 *= 1.2;
+
+                //Incrementa el nivel cada vez que toca el sprite save
+                nivel++;
             }
         }
 
+        //Funciones para mover el objeto de los carros izquierda a derecha
         function moveAuto2() {
             squareX2 -= squareSpeed2;
             if (squareX2 + anchoAuto < 0) {
@@ -498,9 +527,9 @@
         }
 
         function moveAuto5() {
-            squareX5 += squareSpeed5; 
+            squareX5 += squareSpeed5;
             if (squareX5 > canvasWidth) {
-                squareX5 = -anchoAuto; 
+                squareX5 = -anchoAuto;
             }
         }
 
@@ -512,13 +541,14 @@
         }
 
         function moveAuto7() {
-            squareX7 += squareSpeed7; 
+            squareX7 += squareSpeed7;
             if (squareX7 > canvasWidth) {
-                squareX7 = -anchoAuto; 
+                squareX7 = -anchoAuto;
             }
         }
-       
-        
+
+
     </script>
 </body>
+
 </html>
