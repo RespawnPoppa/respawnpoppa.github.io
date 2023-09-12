@@ -65,6 +65,7 @@
                 ctx.drawImage(imagenFondo, 0, 0, canvas.width, canvas.height);
             }
         };
+
         var presentacion = new Image();
         presentacion.src = "img/inicio.png";
         presentacion.onload = function () {
@@ -418,7 +419,6 @@
         // Función para dibujar la escena y la pintura del juego
         function drawScene() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             // Pasar nivel 2 cuando el jugador toque el sprite save y el efecto pintar mas carros
             if (estadoJuego === "normal") {
                 ctx.drawImage(imagenFondo, 0, 0, canvas.width, canvas.height);
@@ -498,9 +498,13 @@
                 squareSpeed5 *= 2.3;
                 squareSpeed6 *= 1.2;
                 squareSpeed6 *= 1.2;
+                squareSpeed7 *= 1.2;
 
                 //Incrementa el nivel cada vez que toca el sprite save
                 nivel++;
+
+                //Incrementa mas rapido el personaje
+                speed ++
             }
         }
 
